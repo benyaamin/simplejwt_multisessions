@@ -2,11 +2,14 @@
 simplejwt_multisessions
 =====
 
-simplejwt_multisessions is a Django app to conduct web-based simplejwt_multisessions. 
-For each question,
-visitors can choose between a fixed number of answers.
+simplejwt_multisessions is a Django app that allows you to generate SIMPLE_JWT with 
+two different lifetimes plus more options.
 
-Detailed documentation is in the "docs" directory.
+options:
+1- Two Different lifetimes
+2- Set Limitation on number available sessions
+3- Limitation Policies e.g., Destroy oldest sessions or not
+
 
 Quick start
 -----------
