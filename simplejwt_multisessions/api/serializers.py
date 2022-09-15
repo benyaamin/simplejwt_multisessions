@@ -1,6 +1,6 @@
 '''
 
-Created By Benyamin, 10 Aug 2022
+Created By Benyamin Agha Ebrahimi, 10 Aug 2022
 
 '''
 
@@ -65,6 +65,8 @@ class SessionCreateSerializer(serializers.Serializer):
         elif data['session'].upper()                                    == "SHORT":
             data['session']                                             = 0
             data['session_key']                                         = 'SHORT_SESSION'
+        else:
+            raise serializers.ValidationError("Invalid Session Type. Valid options: ['LONG', 'SHORT']")
         
         return data
 
@@ -92,7 +94,7 @@ class SessionRefresh(serializers.Serializer):
             data['session']                                             = 1
             data['session_key']                                         = 'LONG_SESSION'
         else:
-            raise serializers.ValidationError("Invalid Session Type")
+            raise serializers.ValidationError("Invalid Session Type. Valid options: ['LONG', 'SHORT']")
 
         return data
     
@@ -128,7 +130,7 @@ class ListRequestSerializer(serializers.Serializer):
                                                 "Sessions"              : [],
                                                 }
         else:
-            raise serializers.ValidationError("Invalid Session Type")
+            raise serializers.ValidationError("Invalid Session Type. Valid options: ['LONG', 'SHORT', 'ALL']")
 
         return data
 class DestroySessionSerializer(serializers.Serializer):

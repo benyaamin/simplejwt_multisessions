@@ -1,10 +1,11 @@
 '''
 
-Created By Benyamin, 10 Aug 2022
+Created By Benyamin Agha Ebrahimi, 10 Aug 2022
 
 
 '''
 from datetime                                           import datetime
+from hashlib import new
 from django.utils.timezone                              import make_aware
 from django.template.defaultfilters                     import slugify
 from django.utils                                       import timezone
@@ -155,7 +156,7 @@ def refreshSession(request):
             if sessionObj.expiresAt > timezone.now() and sessionObj.session == data.get('session'):
 
                 sessionType_KEY                         = data.get('session_key')
-                
+
                 try:
 
                     # Retrive the token from JWT Model!
@@ -350,9 +351,9 @@ def destroyAllOtherSessions(request):
     if serializer.is_valid(raise_exception=True):
         data                                            = serializer.validated_data
         
-        lookups                                         = Q(user = request.user)
+        lookups                                         = Q(user = request.user) & Q(expiresAt__gt=timezone.now())
         if data['session']                              in [0, 1]:
-            lookups                                     = Q(user = request.user) & Q(session = data.get('session'))
+            lookups                                     = Q(user = request.user) & Q(expiresAt__gt=timezone.now()) & Q(session = data.get('session'))
         qs                                              = AuthenticationSession.objects.filter(lookups)
         if qs.exists():
             for each in qs:

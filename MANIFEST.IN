@@ -1,0 +1,5 @@
+include LICENSE
+include README.rst
+recursive-include simplejwt_multisessions/api serializers.py
+recursive-include simplejwt_multisessions/api views.py
+recursive-include docs *
