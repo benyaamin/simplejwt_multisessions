@@ -53,8 +53,6 @@ User guide
 Installation
 ~~~~~~~~~~~~
 
-Install with pip:
-
 1. Install with pip:
 
 .. code-block:: console
@@ -334,21 +332,21 @@ NOTICE: Since this API's `permission_classes` is set to `IsAuthenticated` the pr
                         "created_at": "2022-09-08T19:14:33Z",
                         "last_update": "2022-09-08T19:14:33.108983Z",
                         "expires_at": "2022-10-08T19:14:33Z",
-                        "session_info": "postman 3"
+                        "session_info": "iOS native app, V1.0.2"
                     },
                     {
                         "session_id": "sppfiktswq-4",
                         "created_at": "2022-09-08T19:14:59Z",
                         "last_update": "2022-09-08T19:14:59.905518Z",
                         "expires_at": "2022-10-08T19:14:59Z",
-                        "session_info": "postman 2"
+                        "session_info": "android native app, V1.4"
                     },
                     {
                         "session_id": "rvu6qdlcdc-5",
                         "created_at": "2022-09-08T19:15:22Z",
                         "last_update": "2022-09-08T19:15:22.407307Z",
                         "expires_at": "2022-10-08T19:15:22Z",
-                        "session_info": "postman 1"
+                        "session_info": "react native app, V2.5"
                     },
                 ]
             }
