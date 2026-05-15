@@ -50,10 +50,7 @@ class SessionCreateSerializer(serializers.Serializer):
         self.user                                                       = authenticate(**credentials_kwargs)
         if not self.user:
             raise serializers.ValidationError("Invalid Credentials or not active account found!")
-        if not self.user \
-        and data['secret_key']                                          != settings.JWT_MULTISESSIONS['SECRET']:
-            raise serializers.ValidationError("Invalid Credentials or not active account found!")
-        
+
         data['user']                                                    = self.user
 
         if data['secret_key']                                           != settings.JWT_MULTISESSIONS['SECRET']:

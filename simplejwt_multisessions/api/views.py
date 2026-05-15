@@ -5,7 +5,6 @@ Created By Benyamin Agha Ebrahimi, 10 Aug 2022
 
 '''
 from datetime                                           import datetime
-from hashlib import new
 from django.utils.timezone                              import make_aware
 from django.template.defaultfilters                     import slugify
 from django.utils                                       import timezone

@@ -916,7 +916,7 @@ class UserTestCase(TestCase):
 
         self.assertEqual(len(AuthenticationSession.objects.all()), 3)
 
-        url_destory_other = reverse('destory_all_other')
+        url_destory_other = reverse('destroy_all_other')
         resp_destory = client_long.post(url_destory_other,{'refresh': refresh_long_1, 'session': 'long'},  format='json') 
         self.assertEqual(resp_destory.status_code, status.HTTP_200_OK)
 

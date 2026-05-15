@@ -1,0 +1,4 @@
+include LICENSE
+include README.rst
+recursive-include simplejwt_multisessions *.py
+recursive-include simplejwt_multisessions/migrations *.py

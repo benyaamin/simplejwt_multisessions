@@ -37,8 +37,8 @@ Why use simplejwt_multisessions?
 Requirements
 ~~~~~~~~~~~~
 
-- `Python`_ 3.8+
-- `Django`_ 3.2+
+- `Python`_ 3.8 – 3.13
+- `Django`_ 3.2, 4.1, 4.2, 5.0, 5.1, 5.2
 - `djangorestframework`_ 3.12+
 - `djangorestframework-simplejwt`_ 5.0.0+
 
@@ -59,9 +59,18 @@ Installation
 
     $ python -m pip install simplejwt_multisessions
 
-2. Clone the repo into your Django Project
+2. Run migrations after adding to ``INSTALLED_APPS``:
 
-https://github.com/benyaamin/simplejwt_multisessions
+.. code-block:: console
+
+    $ python manage.py migrate simplejwt_multisessions
+
+Running the test suite
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: console
+
+    $ DJANGO_SETTINGS_MODULE=test_settings python -m django test simplejwt_multisessions.tests -v 2
 
 settings.py configuration 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

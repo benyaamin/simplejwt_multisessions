@@ -35,10 +35,11 @@ class AuthenticationSession(models.Model):
     lastUpdateDate                                  = models.DateTimeField(auto_now_add=True)
     # updatedSessionTime                              = models.DateTimeField(auto_now_add=True)
 
-    info                                            = models.TextField(blank = True, null = True)        
+    info                                            = models.TextField(blank = True, null = True)
 
     def get_lastUpdateDate(self):
         return self.lastUpdateDate
 
-    # def __str__(self):
-    #     return self.token
+    def __str__(self):
+        session_type = 'LONG' if self.session == self.LONG else 'SHORT'
+        return f'{self.user} — {session_type} — {self.session_id}'
