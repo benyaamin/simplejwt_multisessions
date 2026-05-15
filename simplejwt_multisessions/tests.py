@@ -425,16 +425,18 @@ class UserTestCase(TestCase):
         self.assertFalse('refresh' in resp.json())
         self.assertTrue('access' in resp.json())
 
-        # If every_tiem flag with extend_session set to true works!
+        # If every_time flag with extend_session set to true works!
+        # ROTATE_REFRESH_TOKENS is False here, so the token string must NOT change —
+        # only sessionObj.expiresAt is updated in the DB.
         settings.JWT_MULTISESSIONS[s_key]['EXTEND_SESSION'] = True
         settings.JWT_MULTISESSIONS[s_key]['EXTEND_SESSION_EVERY_TIME'] = True
         resp = self.client.post(url, {'refresh': refresh_3, 'session': s_type, 'secret_key': theKey}, format='json')
         self.assertTrue('refresh' in resp.json())
         self.assertTrue('access' in resp.json())
         refresh_4 = resp.json()['refresh']
-        self.assertNotEqual(refresh_4, refresh_3)
+        self.assertEqual(refresh_4, refresh_3)  # same token string — not rotating
         obj = AuthenticationSession.objects.filter(refresh=refresh_3)
-        self.assertEqual(len(obj), 0)
+        self.assertEqual(len(obj), 1)  # session record still exists with the same token
 
         # Test if once after each time and extend_session set to true, works!
         settings.JWT_MULTISESSIONS[s_key]['EXTEND_SESSION'] = True

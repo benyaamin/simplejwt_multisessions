@@ -2,7 +2,27 @@
 simplejwt_multisessions: simpleJWT with session options plus two different refresh lifetimes
 ============================================================================================
 
-simplejwt_multisessions is a Django app based on `djangorestframework-simplejwt` that allows you 
+.. image:: https://img.shields.io/pypi/v/simplejwt_multisessions.svg
+   :target: https://pypi.org/project/simplejwt_multisessions/
+   :alt: PyPI version
+
+.. image:: https://img.shields.io/pypi/pyversions/simplejwt_multisessions.svg
+   :target: https://pypi.org/project/simplejwt_multisessions/
+   :alt: Supported Python versions
+
+.. image:: https://img.shields.io/pypi/djversions/simplejwt_multisessions.svg
+   :target: https://pypi.org/project/simplejwt_multisessions/
+   :alt: Supported Django versions
+
+.. image:: https://github.com/benyaamin/simplejwt_multisessions/actions/workflows/ci.yml/badge.svg
+   :target: https://github.com/benyaamin/simplejwt_multisessions/actions/workflows/ci.yml
+   :alt: CI status
+
+.. image:: https://img.shields.io/pypi/l/simplejwt_multisessions.svg
+   :target: https://github.com/benyaamin/simplejwt_multisessions/blob/main/LICENSE
+   :alt: License: MIT
+
+simplejwt_multisessions is a Django app based on `djangorestframework-simplejwt` that allows you
 to generate SIMPLE_JWT with two different lifetimes and session features.
 
 Introduction
@@ -184,6 +204,26 @@ to `settings.py`
             'DESTROY_OLDEST_ACTIVE_SESSION': True,
         }
     }
+
+Security note: the ``SECRET`` field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Several endpoints (``login``, ``refresh``, ``logout``) use ``permission_classes = [AllowAny]``
+and instead require a ``secret_key`` field in the request body that must match
+``JWT_MULTISESSIONS['SECRET']`` in your settings.
+
+This is a deliberate trade-off for APIs that must work without a valid access token
+(e.g. the login endpoint that *creates* the first token).  Keep the following in mind:
+
+- **Never expose ``SECRET`` to front-end code.**  Treat it like a server-side API key.
+  Only server-to-server callers or your own trusted mobile/web build should know it.
+- **Use a long, random value** — not ``SECRET_KEY`` itself in production.
+  Generate one with ``python -c "import secrets; print(secrets.token_hex(32))"``.
+- **Use HTTPS exclusively.**  The secret travels in the request body and offers no
+  protection over plain HTTP.
+- Endpoints that operate on an *already authenticated* user (``list``, ``destroy``,
+  ``destroyAllOther``) use ``permission_classes = [IsAuthenticated]`` and require a
+  valid Bearer token — no ``secret_key`` needed.
 
 URLs
 ~~~~~

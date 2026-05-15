@@ -1,4 +1,7 @@
 include LICENSE
 include README.rst
+include CHANGELOG.rst
+include CONTRIBUTING.rst
+include tox.ini
 recursive-include simplejwt_multisessions *.py
 recursive-include simplejwt_multisessions/migrations *.py

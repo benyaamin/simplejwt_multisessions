@@ -185,15 +185,20 @@ def refreshSession(request):
                     if settings.JWT_MULTISESSIONS[sessionType_KEY]['EXTEND_SESSION'] and \
                         (settings.JWT_MULTISESSIONS[sessionType_KEY]['EXTEND_SESSION_EVERY_TIME'] or 
                         sessionObj.expiresAt < timezone.now() + settings.JWT_MULTISESSIONS[sessionType_KEY]['EXTEND_SESSION_ONCE_AFTER_EACH']):
-                        # If The update each time flag is true then should rotate refresh 
-                        # Or Rotate Refresh after each amount of time 
+                        # Extend the session expiry tracked in the DB.
+                        # Only update the JWT exp claim itself when ROTATE_REFRESH_TOKENS is True
+                        # (i.e. a brand-new token was already created above). When not rotating,
+                        # the view validates sessions against sessionObj.expiresAt, not the JWT
+                        # exp field, so mutating the token string here is both unnecessary and
+                        # incorrect (it produces a token the DB no longer recognises).
                         sessionObj.expiresAt            = rightNow + settings.JWT_MULTISESSIONS[sessionType_KEY]['REFRESH_TOKEN_LIFETIME']
                         updatedRefresh                  = True
-                        new_RefreshToken.set_exp(
-                                                claim   = "exp",
-                                            from_time   = None,
-                                            lifetime    = settings.JWT_MULTISESSIONS[sessionType_KEY]['REFRESH_TOKEN_LIFETIME']
-                                        )
+                        if settings.JWT_MULTISESSIONS[sessionType_KEY]['ROTATE_REFRESH_TOKENS']:
+                            new_RefreshToken.set_exp(
+                                                    claim   = "exp",
+                                                from_time   = None,
+                                                lifetime    = settings.JWT_MULTISESSIONS[sessionType_KEY]['REFRESH_TOKEN_LIFETIME']
+                                            )
 
                     else:
                         # Won't update refresh
