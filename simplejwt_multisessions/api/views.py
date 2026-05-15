@@ -185,20 +185,29 @@ def refreshSession(request):
                     if settings.JWT_MULTISESSIONS[sessionType_KEY]['EXTEND_SESSION'] and \
                         (settings.JWT_MULTISESSIONS[sessionType_KEY]['EXTEND_SESSION_EVERY_TIME'] or 
                         sessionObj.expiresAt < timezone.now() + settings.JWT_MULTISESSIONS[sessionType_KEY]['EXTEND_SESSION_ONCE_AFTER_EACH']):
-                        # Extend the session expiry tracked in the DB.
-                        # Only update the JWT exp claim itself when ROTATE_REFRESH_TOKENS is True
-                        # (i.e. a brand-new token was already created above). When not rotating,
-                        # the view validates sessions against sessionObj.expiresAt, not the JWT
-                        # exp field, so mutating the token string here is both unnecessary and
-                        # incorrect (it produces a token the DB no longer recognises).
                         sessionObj.expiresAt            = rightNow + settings.JWT_MULTISESSIONS[sessionType_KEY]['REFRESH_TOKEN_LIFETIME']
                         updatedRefresh                  = True
+
                         if settings.JWT_MULTISESSIONS[sessionType_KEY]['ROTATE_REFRESH_TOKENS']:
+                            # new_RefreshToken is already a fresh token from the rotate block above;
+                            # just stamp the new expiry into its JWT payload.
                             new_RefreshToken.set_exp(
                                                     claim   = "exp",
                                                 from_time   = None,
                                                 lifetime    = settings.JWT_MULTISESSIONS[sessionType_KEY]['REFRESH_TOKEN_LIFETIME']
                                             )
+                        elif not settings.JWT_MULTISESSIONS[sessionType_KEY]['EXTEND_SESSION_EVERY_TIME']:
+                            # ONCE_AFTER_EACH threshold crossed without token rotation:
+                            # issue a brand-new token whose JWT exp reflects the extended lifetime.
+                            new_RefreshToken            = RefreshToken.for_user(theUser)
+                            new_RefreshToken.set_exp(
+                                                    claim   = "exp",
+                                                from_time   = None,
+                                                lifetime    = settings.JWT_MULTISESSIONS[sessionType_KEY]['REFRESH_TOKEN_LIFETIME']
+                                            )
+                        # else: EXTEND_EVERY_TIME without rotation — sessionObj.expiresAt update
+                        # is sufficient. The existing token string must NOT be mutated in-place
+                        # (set_exp shifts exp by ~1 s, producing a string the DB no longer holds).
 
                     else:
                         # Won't update refresh
